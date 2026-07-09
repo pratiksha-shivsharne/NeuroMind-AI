@@ -28,6 +28,12 @@ st.set_page_config(
 )
 
 # ----------------------------
+# Session State
+# ----------------------------
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+# ----------------------------
 # Title
 # ----------------------------
 st.title("🧠 NeuroMind AI")
@@ -56,9 +62,6 @@ question = st.text_input(
 # ----------------------------
 if st.button("🚀 Ask AI"):
 
-    # ----------------------------
-    # Validation
-    # ----------------------------
     if uploaded_file is None:
         st.warning("⚠️ Please upload a PDF first.")
         st.stop()
@@ -131,23 +134,72 @@ if st.button("🚀 Ask AI"):
     st.success("✅ Answer Generated")
 
     # ----------------------------
+    # Save Chat History
+    # ----------------------------
+    st.session_state.chat_history.append(
+        {
+            "question": question,
+            "answer": answer
+        }
+    )
+
+    # ----------------------------
     # Final Answer
     # ----------------------------
     st.write("## 🤖 AI Answer")
     st.success(answer)
 
     # ----------------------------
-    # Retrieved Chunks
+    # Source Citations
     # ----------------------------
-    with st.expander("🔍 Retrieved Chunks"):
+    st.write("## 📖 Sources Used")
+
+    if docs:
 
         for i, doc in enumerate(docs, start=1):
-            st.markdown(f"### Chunk {i}")
-            st.write(doc.page_content)
-            st.divider()
+
+            with st.expander(f"📄 Source {i}"):
+
+                st.write(doc.page_content)
+
+    else:
+
+        st.warning("No source chunks found.")
 
     # ----------------------------
     # PDF Preview
     # ----------------------------
     with st.expander("📄 PDF Preview"):
         st.text(pdf_text[:1000])
+
+# ----------------------------
+# Chat History
+# ----------------------------
+st.divider()
+
+st.subheader("💬 Chat History")
+
+if len(st.session_state.chat_history) == 0:
+    st.info("No chat history yet.")
+
+else:
+
+    for i, chat in enumerate(st.session_state.chat_history, start=1):
+
+        st.markdown(f"### Conversation {i}")
+
+        st.markdown("**👤 You:**")
+        st.write(chat["question"])
+
+        st.markdown("**🤖 AI:**")
+        st.success(chat["answer"])
+
+        st.divider()
+
+# ----------------------------
+# Clear Chat Button
+# ----------------------------
+if st.button("🗑️ Clear Chat"):
+    st.session_state.chat_history = []
+    st.success("✅ Chat history cleared successfully!")
+    st.rerun()
