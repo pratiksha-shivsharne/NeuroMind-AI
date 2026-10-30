@@ -14,8 +14,8 @@ Python, LangChain, FAISS / ChromaDB, HuggingFace Embeddings, Llama 3.3 70B (Groq
 ## Deployment
 The app is containerized with Docker and deployed on an AWS EC2 instance (Streamlit frontend + FastAPI backend).
 
-## Screenshot
-![NeuroMind AI](screenshot.png)
+## Video & Screenshot
+[LinkedIn](https://lnkd.in/p/dRnweSYE )
 
 ## Author
 Pratiksha Shivsharne - [LinkedIn](https://www.linkedin.com/in/pratiksha-shivsharne)
